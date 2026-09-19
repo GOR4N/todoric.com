@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>todoric.com</title>
-    <!-- Uvoz 5 varijanti upečatljivih i debelih fontova sa Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@900&family=Montserrat:wght@900&family=Oswald:wght@700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -19,94 +18,380 @@
         body {
             background-color: #000000;
             color: #ffffff;
-            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Montserrat', sans-serif; /* Podrazumevani font */
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        .text-container {
-            flex: 1;
+        .main-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
         }
 
         h1 {
-            font-size: clamp(3rem, 12vw, 10rem);
+            font-size: clamp(3.5rem, 12vw, 9rem);
             font-weight: 900;
-            text-transform: lowercase;
-            letter-spacing: -0.03em;
-            text-align: center;
+            letter-spacing: -0.04em;
+            margin-bottom: 25px;
             user-select: none;
-            transition: font-family 0.2s ease;
         }
 
-        /* Kontrolna tabla za izbor fontova (neće smetati na mobilnom) */
-        .font-selector {
-            position: absolute;
-            bottom: 30px;
+        .action-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 900;
+            font-family: 'Inter', sans-serif;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            background: #e0e0e0;
+        }
+
+        .game-modal {
+            display: none;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 600px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        canvas {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .controls-info {
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 15px;
+        }
+
+        .selector-bar {
+            position: fixed;
+            bottom: 25px;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            gap: 8px;
+            background: rgba(20, 20, 20, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
             border-radius: 30px;
             backdrop-filter: blur(10px);
+            max-width: 95vw;
+            overflow-x: auto;
         }
 
-        .font-btn {
+        .game-tab {
             background: transparent;
             color: #888;
-            border: 1px solid transparent;
+            border: none;
             padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
         }
 
-        .font-btn:hover {
-            color: #fff;
-        }
-
-        .font-btn.active {
+        .game-tab.active {
             color: #000;
             background: #fff;
-            border-color: #fff;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="text-container">
-        <h1 id="headline">GOR4N<br>soon ...</h1>
+    <div class="main-container">
+        <h1>soon ...</h1>
+        <button class="action-btn" id="startBtn" onclick="toggleGame()">Pokreni igru</button>
+
+        <div class="game-modal" id="gameModal">
+            <canvas id="gameCanvas" width="500" height="350"></canvas>
+            <div class="controls-info" id="gameInfo"></div>
+        </div>
     </div>
 
-    <!-- Meni za testiranje fontova -->
-    <div class="font-selector">
-        <button class="font-btn active" onclick="setFont('Montserrat', '900', this)">1. Montserrat</button>
-        <button class="font-btn" onclick="setFont('Anton', '400', this)">2. Anton</button>
-        <button class="font-btn" onclick="setFont('Syne', '800', this)">3. Syne</button>
-        <button class="font-btn" onclick="setFont('Inter', '900', this)">4. Inter Heavy</button>
-        <button class="font-btn" onclick="setFont('Oswald', '700', this)">5. Oswald</button>
+    <div class="selector-bar">
+        <button class="game-tab active" onclick="selectGame('pong', this)">Pong</button>
+        <button class="game-tab" onclick="selectGame('snake', this)">Snake</button>
+        <button class="game-tab" onclick="selectGame('constellation', this)">Constellation</button>
+        <button class="game-tab" onclick="selectGame('memory', this)">Memory</button>
     </div>
 
     <script>
-        function setFont(fontName, weight, btn) {
-            const headline = document.getElementById('headline');
-            headline.style.fontFamily = `'${fontName}', sans-serif`;
-            headline.style.fontWeight = weight;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameModal = document.getElementById('gameModal');
+        const gameInfo = document.getElementById('gameInfo');
+        
+        let currentGame = 'pong';
+        let isRunning = false;
+        let animationFrame;
+        let gameInterval;
 
-            // Promena aktivnog dugmeta
-            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function toggleGame() {
+            isRunning = !isRunning;
+            const startBtn = document.getElementById('startBtn');
+            if (isRunning) {
+                gameModal.style.display = 'block';
+                startBtn.innerText = 'Zatvori igru';
+                initGame(currentGame);
+            } else {
+                stopCurrentGame();
+                gameModal.style.display = 'none';
+                startBtn.innerText = 'Pokreni igru';
+            }
+        }
+
+        function selectGame(gameType, tab) {
+            document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentGame = gameType;
+            if (isRunning) {
+                stopCurrentGame();
+                initGame(currentGame);
+            }
+        }
+
+        function stopCurrentGame() {
+            cancelAnimationFrame(animationFrame);
+            clearInterval(gameInterval);
+            window.onkeydown = null;
+            canvas.onmousemove = null;
+            canvas.onclick = null;
+        }
+
+        function initGame(type) {
+            stopCurrentGame();
+            if (type === 'pong') startPong();
+            else if (type === 'snake') startSnake();
+            else if (type === 'constellation') startConstellation();
+            else if (type === 'memory') startMemory();
+        }
+
+        /* --- 1. PONG --- */
+        function startPong() {
+            gameInfo.innerText = "Komande: W / S ili Strelice gore/dole";
+            let paddleH = 60, paddleW = 8;
+            let p1Y = (canvas.height - paddleH) / 2, p2Y = p1Y;
+            let ballX = canvas.width / 2, ballY = canvas.height / 2;
+            let ballSpeedX = 4, ballSpeedY = 3;
+            let keys = {};
+
+            window.onkeydown = e => keys[e.key] = true;
+            window.onkeyup = e => keys[e.key] = false;
+
+            function loop() {
+                if (keys['w'] || keys['ArrowUp']) p1Y = Math.max(0, p1Y - 5);
+                if (keys['s'] || keys['ArrowDown']) p1Y = Math.min(canvas.height - paddleH, p1Y + 5);
+
+                p2Y += (ballY - (p2Y + paddleH / 2)) * 0.08;
+
+                ballX += ballSpeedX;
+                ballY += ballSpeedY;
+
+                if (ballY <= 0 || ballY >= canvas.height) ballSpeedY *= -1;
+
+                if (ballX <= paddleW && ballY >= p1Y && ballY <= p1Y + paddleH) ballSpeedX *= -1.05;
+                if (ballX >= canvas.width - paddleW && ballY >= p2Y && ballY <= p2Y + paddleH) ballSpeedX *= -1.05;
+
+                if (ballX < 0 || ballX > canvas.width) {
+                    ballX = canvas.width / 2;
+                    ballY = canvas.height / 2;
+                    ballSpeedX = 4;
+                }
+
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, p1Y, paddleW, paddleH);
+                ctx.fillRect(canvas.width - paddleW, p2Y, paddleW, paddleH);
+                ctx.beginPath();
+                ctx.arc(ballX, ballY, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isRunning && currentGame === 'pong') animationFrame = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        /* --- 2. SNAKE --- */
+        function startSnake() {
+            gameInfo.innerText = "Komande: Strelice za upravljanje";
+            let grid = 15;
+            let snake = [{x: 150, y: 150}];
+            let dx = grid, dy = 0;
+            let food = {x: 300, y: 150};
+
+            window.onkeydown = e => {
+                if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -grid; }
+                if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = grid; }
+                if (e.key === 'ArrowLeft' && dx === 0) { dx = -grid; dy = 0; }
+                if (e.key === 'ArrowRight' && dx === 0) { dx = grid; dy = 0; }
+            };
+
+            gameInterval = setInterval(() => {
+                let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+                if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                    snake = [{x: 150, y: 150}];
+                    dx = grid; dy = 0;
+                    return;
+                }
+
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    food = {
+                        x: Math.floor(Math.random() * (canvas.width / grid)) * grid,
+                        y: Math.floor(Math.random() * (canvas.height / grid)) * grid
+                    };
+                } else {
+                    snake.pop();
+                }
+
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fff';
+                snake.forEach(s => ctx.fillRect(s.x, s.y, grid - 2, grid - 2));
+                ctx.fillStyle = '#888';
+                ctx.fillRect(food.x, food.y, grid - 2, grid - 2);
+            }, 90);
+        }
+
+        /* --- 3. CONSTELLATION --- */
+        function startConstellation() {
+            gameInfo.innerText = "Pomerajte miš po polju za spajanje čestica";
+            let particles = Array.from({length: 40}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: (Math.random() - 0.5) * 1.5
+            }));
+            let mouse = {x: -100, y: -100};
+
+            canvas.onmousemove = e => {
+                let rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            };
+
+            function loop() {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.width) p.vy *= -1;
+
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    let distMouse = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+                    if (distMouse < 100) {
+                        ctx.strokeStyle = `rgba(255,255,255,${1 - distMouse / 100})`;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                });
+
+                if (isRunning && currentGame === 'constellation') animationFrame = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        /* --- 4. MEMORY --- */
+        function startMemory() {
+            gameInfo.innerText = "Kliknite na polje koje je zatreperilo";
+            let sequence = [];
+            let userStep = 0;
+            let flashSquare = -1;
+
+            function nextRound() {
+                sequence.push(Math.floor(Math.random() * 4));
+                userStep = 0;
+                playSequence();
+            }
+
+            function playSequence() {
+                let i = 0;
+                let interval = setInterval(() => {
+                    flashSquare = sequence[i];
+                    draw();
+                    setTimeout(() => { flashSquare = -1; draw(); }, 300);
+                    i++;
+                    if (i >= sequence.length) clearInterval(interval);
+                }, 600);
+            }
+
+            canvas.onclick = e => {
+                let rect = canvas.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                let clicked = -1;
+
+                if (x < canvas.width / 2 && y < canvas.height / 2) clicked = 0;
+                if (x >= canvas.width / 2 && y < canvas.height / 2) clicked = 1;
+                if (x < canvas.width / 2 && y >= canvas.height / 2) clicked = 2;
+                if (x >= canvas.width / 2 && y >= canvas.height / 2) clicked = 3;
+
+                if (clicked === sequence[userStep]) {
+                    userStep++;
+                    if (userStep === sequence.length) setTimeout(nextRound, 800);
+                } else {
+                    sequence = [];
+                    setTimeout(nextRound, 1000);
+                }
+            };
+
+            function draw() {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const coords = [
+                    [10, 10], [canvas.width / 2 + 5, 10],
+                    [10, canvas.height / 2 + 5], [canvas.width / 2 + 5, canvas.height / 2 + 5]
+                ];
+
+                coords.forEach((c, idx) => {
+                    ctx.fillStyle = flashSquare === idx ? '#fff' : '#222';
+                    ctx.fillRect(c[0], c[1], canvas.width / 2 - 15, canvas.height / 2 - 15);
+                });
+            }
+            draw();
+            nextRound();
         }
     </script>
 </body>
