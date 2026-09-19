@@ -1,9 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="sr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>todoric.com</title>
+    <!-- Uvoz 5 varijanti upečatljivih i debelih fontova sa Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@900&family=Montserrat:wght@900&family=Oswald:wght@700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif; /* Podrazumevani font */
+            overflow: hidden;
+        }
+
+        .text-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 900;
+            text-transform: lowercase;
+            letter-spacing: -0.03em;
+            text-align: center;
+            user-select: none;
+            transition: font-family 0.2s ease;
+        }
+
+        /* Kontrolna tabla za izbor fontova (neće smetati na mobilnom) */
+        .font-selector {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .font-btn {
+            background: transparent;
+            color: #888;
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .font-btn:hover {
+            color: #fff;
+        }
+
+        .font-btn.active {
+            color: #000;
+            background: #fff;
+            border-color: #fff;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Sajt je u izradi.</h1>
+
+    <div class="text-container">
+        <h1 id="headline">soon ...</h1>
+    </div>
+
+    <!-- Meni za testiranje fontova -->
+    <div class="font-selector">
+        <button class="font-btn active" onclick="setFont('Montserrat', '900', this)">1. Montserrat</button>
+        <button class="font-btn" onclick="setFont('Anton', '400', this)">2. Anton</button>
+        <button class="font-btn" onclick="setFont('Syne', '800', this)">3. Syne</button>
+        <button class="font-btn" onclick="setFont('Inter', '900', this)">4. Inter Heavy</button>
+        <button class="font-btn" onclick="setFont('Oswald', '700', this)">5. Oswald</button>
+    </div>
+
+    <script>
+        function setFont(fontName, weight, btn) {
+            const headline = document.getElementById('headline');
+            headline.style.fontFamily = `'${fontName}', sans-serif`;
+            headline.style.fontWeight = weight;
+
+            // Promena aktivnog dugmeta
+            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
 </body>
 </html>
